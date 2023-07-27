@@ -1,0 +1,5 @@
+.env
+.env.payments
+.env.property
+.env.tennant_portal
+bin/*

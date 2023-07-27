@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  payments:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dockerfile.payments
+    env_file: .env.payments
+    environment:
+      DB_HOST: payments_db
+    ports:
+      - "8000:8000"
+    links:
+      - payments_db
+  payments_db:
+    image: postgres:alpine
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${PAYMENTS_DB_USER}
+      - POSTGRES_PASSWORD=${PAYMENTS_DB_PASS}
+      - POSTGRES_DB=${PAYMENTS_DB_NAME}
+      - POSTGRES_PORT=${PAYMENTS_DB_PORT}
+    ports:
+      - ${PAYMENTS_DB_PORT}:5432
+    volumes:
+      - payments-db:/var/lib/postgresql/data
+
+  property:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dockerfile.property
+    env_file: .env.property
+    environment:
+      DB_HOST: property_db
+    ports:
+      - "8001:8001"
+    links:
+      - property_db
+  property_db:
+    image: postgres:alpine
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${PROPERTY_DB_USER}
+      - POSTGRES_PASSWORD=${PROPERTY_DB_PASS}
+      - POSTGRES_DB=${PROPERTY_DB_NAME}
+      - POSTGRES_PORT=${PROPERTY_DB_PORT}
+    ports:
+      - ${PROPERTY_DB_PORT}:5432
+    volumes:
+      - property-db:/var/lib/postgresql/data
+
+  tennant_portal:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dockerfile.tennant_portal
+    env_file: .env.tennant_portal
+    environment:
+      DB_HOST: tennant_portal_db
+    ports:
+      - "8002:8002"
+    links:
+      - tennant_portal_db
+  tennant_portal_db:
+    image: postgres:alpine
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${TENNANT_PORTAL_DB_USER}
+      - POSTGRES_PASSWORD=${TENNANT_PORTAL_DB_PASS}
+      - POSTGRES_DB=${TENNANT_PORTAL_DB_NAME}
+      - POSTGRES_PORT=${TENNANT_PORTAL_DB_PORT}
+    ports:
+      - ${TENNANT_PORTAL_DB_PORT}:5432
+    volumes:
+      - tennant-portal-db:/var/lib/postgresql/data
+  
+volumes:
+  payments-db:
+  property-db:
+  tennant-portal-db:
