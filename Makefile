@@ -5,7 +5,7 @@ GO_BINARY_DIR := bin
 CGO_ENABLED   := 0
 GOOS          ?= linux
 GOARCH        ?= arm64
-MIGRATIONS_DIR = business/data/migrations
+MIGRATIONS_DIR = business/data/migrations/services
 SERVICES_DIR   = app/services
 
 .PHONY : build
@@ -19,6 +19,10 @@ run    :
 .PHONY : stop
 stop   :
 	@docker compose down
+
+.PHONY    : migration
+migration :
+	@cd $(MIGRATIONS_DIR)/${SERVICE} && goose postgres "host=localhost user=${DB_USER} password=${DB_PASS} dbname=${DB_NAME} port=${DB_PORT}" up
 
 .PHONY : test
 test   :

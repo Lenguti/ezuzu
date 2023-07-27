@@ -25,6 +25,7 @@ PROPERTY:       `curl -vvv -X GET 'http://localhost:8001/v1/status'`
 TENNANT_PORTAL: `curl -vvv -X GET 'http://localhost:8002/v1/status'`
 
 Once the webservers have been validated you can run migrations by running:
+make migration SERVICE={{service}} DB_USER={{user}} DB_PASS={{pass}} DB_NAME={{name}} DB_PORT={{port}}
 ```
 
 ### Routes
