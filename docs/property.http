@@ -1,0 +1,46 @@
+###
+# @name createManager
+POST http://localhost:8001/v1/managers
+Content-Type: application/json
+
+{
+    "entity": "biz"
+}
+
+###
+# @name createProperty
+@managerId = {{createManager.response.body.$.manager.id}}
+POST http://localhost:8001/v1/managers/{{managerId}}/properties
+Content-Type: application/json
+
+{
+    "street": "200 nw 95 street",
+    "city": "plantation",
+    "state": "fl",
+    "postalCode": "33324",
+    "name": "biz apartment",
+    "type": "APARTMENT",
+    "unitNumber": 4
+}
+
+###
+# @name getProperty
+@propertyId = {{createProperty.response.body.$.property.id}}
+GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}
+
+###
+# @name listProperties
+GET http://localhost:8001/v1/managers/{{managerId}}/properties
+
+###
+# @name createTennant
+POST http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants
+Content-Type: application/json
+
+{
+    "firstName": "mike",
+    "lastName": "jon",
+    "dateOfBirth": "1987-04-12",
+    "ssn": 876568743,
+    "type": "PRIMARY"
+}

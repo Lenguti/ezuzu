@@ -3,6 +3,12 @@ package v1
 import (
 	"fmt"
 
+	"github.com/lenguti/ezuzu/business/core/manager"
+	"github.com/lenguti/ezuzu/business/core/manager/stores/managerdb"
+	"github.com/lenguti/ezuzu/business/core/property"
+	"github.com/lenguti/ezuzu/business/core/property/stores/propertydb"
+	"github.com/lenguti/ezuzu/business/core/tennant"
+	"github.com/lenguti/ezuzu/business/core/tennant/stores/tennantdb"
 	"github.com/lenguti/ezuzu/business/data/db"
 	"github.com/lenguti/ezuzu/foundation/api"
 	"github.com/rs/zerolog"
@@ -10,6 +16,10 @@ import (
 
 // Controller - represents our handler service orchestrator.
 type Controller struct {
+	Manager  *manager.Core
+	Property *property.Core
+	Tennant  *tennant.Core
+
 	db     *db.DB
 	config Config
 	log    zerolog.Logger
@@ -31,7 +41,15 @@ func NewController(log zerolog.Logger, cfg Config) (*Controller, error) {
 		return nil, fmt.Errorf("new controller: unable to initialize new db: %w", err)
 	}
 
+	mc := manager.NewCore(managerdb.NewStore(ddb), log)
+	pc := property.NewCore(propertydb.NewStore(ddb), log)
+	tc := tennant.NewCore(tennantdb.NewStore(ddb), log)
+
 	return &Controller{
+		Manager:  mc,
+		Property: pc,
+		Tennant:  tc,
+
 		db:     ddb,
 		config: cfg,
 		log:    log,
