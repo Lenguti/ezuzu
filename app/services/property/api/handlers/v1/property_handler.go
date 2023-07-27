@@ -9,6 +9,7 @@ import (
 	"github.com/Boostport/address"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
+	"github.com/lenguti/ezuzu/business/core"
 	"github.com/lenguti/ezuzu/business/core/property"
 	"github.com/lenguti/ezuzu/foundation/api"
 )
@@ -118,8 +119,7 @@ func (c *Controller) GetProperty(ctx context.Context, w http.ResponseWriter, r *
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	pIDStr := api.PathParam(r, propertyIDPathParam)
-	pID, err := uuid.Parse(pIDStr)
+	pID, err := uuid.Parse(api.PathParam(r, propertyIDPathParam))
 	if err != nil {
 		c.log.Err(err).Msg("Invalid property id.")
 		return api.BadRequestError("Invalid id.", err, nil)
@@ -128,6 +128,9 @@ func (c *Controller) GetProperty(ctx context.Context, w http.ResponseWriter, r *
 	p, err := c.Property.Get(ctx, pID)
 	if err != nil {
 		c.log.Err(err).Msg("Unable to get property.")
+		if errors.Is(err, core.ErrNotFound) {
+			return api.NotFoundError("Item not found.", err, nil)
+		}
 		return api.InternalServerError("Error.", err, nil)
 	}
 

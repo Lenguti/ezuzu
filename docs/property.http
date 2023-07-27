@@ -44,3 +44,12 @@ Content-Type: application/json
     "ssn": 876568743,
     "type": "PRIMARY"
 }
+
+###
+# @name getTennant
+@tennantId = {{createTennant.response.body.$.tennant.id}}
+GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants/{{tennantId}}
+
+###
+# @name listTennants
+GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants

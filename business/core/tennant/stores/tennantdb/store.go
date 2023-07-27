@@ -2,8 +2,11 @@ package tennantdb
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
+	"github.com/lenguti/ezuzu/business/core"
 	"github.com/lenguti/ezuzu/business/core/tennant"
 	"github.com/lenguti/ezuzu/business/data/db"
 )
@@ -50,4 +53,35 @@ func (s *Store) Create(ctx context.Context, t tennant.Tennant) error {
 		return fmt.Errorf("create: failed to create tennant: %w", err)
 	}
 	return nil
+}
+
+// Get - will fetch a tennant by its id.
+func (s *Store) Get(ctx context.Context, id string) (tennant.Tennant, error) {
+	const q = `
+	SELECT *
+	FROM tennant
+	WHERE id = $1
+	`
+	var out dbTennant
+	if err := s.db.Get(ctx, &out, q, id); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return tennant.Tennant{}, core.ErrNotFound
+		}
+		return tennant.Tennant{}, fmt.Errorf("get: failed to fetch tennant: %w", err)
+	}
+	return toCoreTennant(out), nil
+}
+
+// List - will list all tennants for the provided property id.
+func (s *Store) List(ctx context.Context, propertyID string) ([]tennant.Tennant, error) {
+	const q = `
+	SELECT *
+	FROM tennant
+	WHERE property_id = $1
+	`
+	var out []dbTennant
+	if err := s.db.List(ctx, &out, q, propertyID); err != nil {
+		return nil, fmt.Errorf("list: failed to list tennants: %w", err)
+	}
+	return toCoreTennants(out), nil
 }

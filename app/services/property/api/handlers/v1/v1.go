@@ -11,6 +11,7 @@ import (
 const (
 	managerIDPathParam  = "managerId"
 	propertyIDPathParam = "propertyId"
+	tennantIDPathParam  = "tennantId"
 )
 
 // Routes - route definitions for v1.
@@ -24,6 +25,8 @@ func (c *Controller) Routes() *api.Router {
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties", c.ListProperties)
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId", c.GetProperty)
 	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties/:propertyId/tennants", c.CreateTennant)
+	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId/tennants/:tennantId", c.GetTennant)
+	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId/tennants", c.ListTennants)
 
 	return c.router
 }

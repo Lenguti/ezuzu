@@ -2,12 +2,14 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/lenguti/ezuzu/business/core"
 	"github.com/lenguti/ezuzu/business/core/tennant"
 	"github.com/lenguti/ezuzu/foundation/api"
 )
@@ -86,4 +88,72 @@ func (c *Controller) CreateTennant(ctx context.Context, w http.ResponseWriter, r
 
 	c.log.Info().Msg("Successfully created Tennant.")
 	return api.Respond(w, http.StatusCreated, CreateTennantResponse{Tennant: toClientTennant(t)})
+}
+
+// GetTennantResponse - represents a client get tennant response.
+type GetTennantResponse struct {
+	Tennant ClientTennant `json:"tennant"`
+}
+
+// GetTennant - invoked by GET /v1/managers/:id/properties/:id/tennants/:id.
+func (c *Controller) GetTennant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Fetching Tennant.")
+
+	if _, err := uuid.Parse(api.PathParam(r, managerIDPathParam)); err != nil {
+		c.log.Err(err).Msg("Invalid manager id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	if _, err := uuid.Parse(api.PathParam(r, propertyIDPathParam)); err != nil {
+		c.log.Err(err).Msg("Invalid property id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	tID, err := uuid.Parse(api.PathParam(r, tennantIDPathParam))
+	if err != nil {
+		c.log.Err(err).Msg("Invalid tennant id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	t, err := c.Tennant.Get(ctx, tID)
+	if err != nil {
+		c.log.Err(err).Msg("Unable to get tennant.")
+		if errors.Is(err, core.ErrNotFound) {
+			return api.NotFoundError("Item not found.", err, nil)
+		}
+		return api.InternalServerError("Error.", err, nil)
+	}
+
+	c.log.Info().Msg("Successfully Fetched Tennant.")
+	return api.Respond(w, http.StatusOK, GetTennantResponse{Tennant: toClientTennant(t)})
+}
+
+// ListTennantsResponse - represents a client list tennant response.
+type ListTennantsResponse struct {
+	Tennants []ClientTennant `json:"tennants"`
+}
+
+// ListTennants - invoked by GET /v1/managers/:id/properties/:id/tennants.
+func (c *Controller) ListTennants(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Listing Tennants.")
+
+	if _, err := uuid.Parse(api.PathParam(r, managerIDPathParam)); err != nil {
+		c.log.Err(err).Msg("Invalid manager id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	pID, err := uuid.Parse(api.PathParam(r, propertyIDPathParam))
+	if err != nil {
+		c.log.Err(err).Msg("Invalid property id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	tts, err := c.Tennant.List(ctx, pID)
+	if err != nil {
+		c.log.Err(err).Msg("Unable to list tennants.")
+		return api.InternalServerError("Error.", err, nil)
+	}
+
+	c.log.Info().Msg("Successfully Listed Tennants.")
+	return api.Respond(w, http.StatusOK, ListTennantsResponse{Tennants: toClientTennants(tts)})
 }
