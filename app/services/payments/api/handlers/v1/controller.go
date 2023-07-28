@@ -6,6 +6,8 @@ import (
 	"github.com/lenguti/ezuzu/app/services/property/api/handlers/v1/client"
 	"github.com/lenguti/ezuzu/business/core/invoice"
 	"github.com/lenguti/ezuzu/business/core/invoice/stores/invoicedb"
+	"github.com/lenguti/ezuzu/business/core/payment"
+	"github.com/lenguti/ezuzu/business/core/payment/stores/paymentdb"
 	"github.com/lenguti/ezuzu/business/data/db"
 	"github.com/lenguti/ezuzu/foundation/api"
 	"github.com/rs/zerolog"
@@ -14,6 +16,7 @@ import (
 // Controller - represents our handler service orchestrator.
 type Controller struct {
 	Invoice *invoice.Core
+	Payment *payment.Core
 
 	pc     *client.Client
 	db     *db.DB
@@ -38,9 +41,11 @@ func NewController(log zerolog.Logger, cfg Config, pc *client.Client) (*Controll
 	}
 
 	ic := invoice.NewCore(invoicedb.NewStore(ddb), log)
+	pymc := payment.NewCore(paymentdb.NewStore(ddb), ic, log)
 
 	return &Controller{db: ddb,
 		Invoice: ic,
+		Payment: pymc,
 
 		pc:     pc,
 		config: cfg,

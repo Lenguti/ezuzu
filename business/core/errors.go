@@ -11,4 +11,10 @@ func (e Error) Error() string {
 const (
 	// ErrNotFound represents an item not found.
 	ErrNotFound = Error("item not found")
+
+	// ErrPastDuePayment represents an error for payment past due.
+	ErrPastDuePayment = Error("payment cannot be past due")
+
+	// ErrPaymentConflict represents an error for payment amount mismatch.
+	ErrPaymentConflict = Error("payments must not exceed invoice amount")
 )

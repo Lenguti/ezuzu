@@ -17,11 +17,13 @@ type ClientInvoice struct {
 	UpdatedAt int64   `json:"updatedAt"`
 }
 
-func toCoreNewInvoice(input CreateInvoiceRequest, amount float64) invoice.NewInvoice {
+func toCoreNewInvoice(input CreateInvoiceRequest, amount float64, mID, pID uuid.UUID) invoice.NewInvoice {
 	newInvoice := invoice.NewInvoice{
-		TenantID: uuid.MustParse(input.TenantID),
-		Amount:   amount,
-		DueDate:  input.parsedTime,
+		ManagerID:  mID,
+		PropertyID: pID,
+		TenantID:   uuid.MustParse(input.TenantID),
+		Amount:     amount,
+		DueDate:    input.parsedTime,
 	}
 	return newInvoice
 }

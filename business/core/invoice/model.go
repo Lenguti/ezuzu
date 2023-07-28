@@ -20,7 +20,9 @@ type Invoice struct {
 
 // NewInvoice - represents fields needed to create a new invoice.
 type NewInvoice struct {
-	TenantID uuid.UUID
-	Amount   float64
-	DueDate  time.Time
+	ManagerID  uuid.UUID
+	PropertyID uuid.UUID
+	TenantID   uuid.UUID
+	Amount     float64
+	DueDate    time.Time
 }

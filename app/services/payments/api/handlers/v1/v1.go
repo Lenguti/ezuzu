@@ -11,6 +11,8 @@ import (
 const (
 	managerIDPathParam  = "managerId"
 	propertyIDPathParam = "propertyId"
+	tenantIDPathParam   = "tenantId"
+	invoiceIDPathParam  = "invoiceId"
 )
 
 // Routes - route definitions for v1.
@@ -20,6 +22,7 @@ func (c *Controller) Routes() *api.Router {
 	c.router.Handle(http.MethodGet, version, "/status", c.status)
 
 	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties/:propertyId/invoices", c.CreateInvoice)
+	c.router.Handle(http.MethodPost, version, "/tenants/:tenantId/invoices/:invoiceId/payments", c.CreatePayment)
 
 	return c.router
 }

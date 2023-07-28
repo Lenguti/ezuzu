@@ -2,13 +2,16 @@ package invoicedb
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
+	"github.com/lenguti/ezuzu/business/core"
 	"github.com/lenguti/ezuzu/business/core/invoice"
 	"github.com/lenguti/ezuzu/business/data/db"
 )
 
-// Store - manages the set of apis for property manager database access.
+// Store - manages the set of apis for invoice manager database access.
 type Store struct {
 	db *db.DB
 }
@@ -48,4 +51,21 @@ func (s *Store) Create(ctx context.Context, i invoice.Invoice) error {
 		return fmt.Errorf("create: failed to create invoice: %w", err)
 	}
 	return nil
+}
+
+// Get - will fetch an invoice by its id.
+func (s *Store) Get(ctx context.Context, id string) (invoice.Invoice, error) {
+	const q = `
+	SELECT *
+	FROM invoices
+	WHERE id = $1
+	`
+	var out dbInvoice
+	if err := s.db.Get(ctx, &out, q, id); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return invoice.Invoice{}, core.ErrNotFound
+		}
+		return invoice.Invoice{}, fmt.Errorf("get: failed to fetch invoice: %w", err)
+	}
+	return toCoreInvoice(out), nil
 }

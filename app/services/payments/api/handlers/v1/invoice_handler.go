@@ -73,7 +73,7 @@ func (c *Controller) CreateInvoice(ctx context.Context, w http.ResponseWriter, r
 	}
 	c.log.Info().Interface("property", p).Msg("Successfully fetched property.")
 
-	i, err := c.Invoice.Create(ctx, toCoreNewInvoice(input, p.Rent), mID, pID)
+	i, err := c.Invoice.Create(ctx, toCoreNewInvoice(input, p.Rent, mID, pID))
 	if err != nil {
 		c.log.Err(err).Msg("Unable to create invoice.")
 		return api.InternalServerError("Error.", err, nil)

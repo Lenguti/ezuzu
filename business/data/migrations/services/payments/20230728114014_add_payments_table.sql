@@ -3,7 +3,7 @@
 CREATE TABLE payments (
     id uuid NOT NULL,
     invoice_id uuid NOT NULL,
-    tennant_id uuid NOT NULL,
+    tenant_id uuid NOT NULL,
     amount float,
     created_at int,
     updated_at int,

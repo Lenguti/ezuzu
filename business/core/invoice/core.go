@@ -9,6 +9,7 @@ import (
 // Storer - represents the data layer behavior for invoices.
 type Storer interface {
 	Create(ctx context.Context, i Invoice) error
+	Get(ctx context.Context, id string) (Invoice, error)
 }
 
 // Core - represents the core business logic for invoices.
