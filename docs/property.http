@@ -4,7 +4,7 @@ POST http://localhost:8001/v1/managers
 Content-Type: application/json
 
 {
-    "entity": "biz"
+    "entity": "payment biz"
 }
 
 ###

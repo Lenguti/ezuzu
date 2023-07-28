@@ -9,6 +9,7 @@ import (
 	"time"
 
 	v1 "github.com/lenguti/ezuzu/app/services/payments/api/handlers/v1"
+	"github.com/lenguti/ezuzu/app/services/property/api/handlers/v1/client"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog"
 )
@@ -22,7 +23,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	ctrl, err := v1.NewController(log, cfg)
+	cCfg, err := client.NewConfig()
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to create new client config.")
+		os.Exit(1)
+	}
+	pc := client.NewClient(cCfg)
+
+	ctrl, err := v1.NewController(log, cfg, pc)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to create v1 controller.")
 		os.Exit(1)

@@ -8,6 +8,8 @@ services:
     env_file: .env.payments
     environment:
       DB_HOST: payments_db
+      PROPERTY_SERVICE_HOST: property
+      PROPERTY_SERVICE_PORT: 8001
     ports:
       - "8000:8000"
     links:

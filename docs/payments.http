@@ -1,0 +1,9 @@
+###
+# @name createInvoice
+POST http://localhost:8000/v1/managers/f81c2348-e72b-4f41-b764-eb92aa19f043/properties/d5205478-a82a-4044-822d-079639a9fe17/invoices
+Content-Type: application/json
+
+{
+    "tenantId": "f81c2348-e72b-4f41-b764-eb92aa19f043",
+    "dueDate": "2023-04-26"
+}

@@ -3,7 +3,7 @@
 CREATE TABLE invoices (
     id uuid NOT NULL,
     property_id uuid NOT NULL,
-    tennant_id uuid NOT NULL,
+    tenant_id uuid NOT NULL,
     amount float,
     due_date int,
     created_at int,

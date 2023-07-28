@@ -8,11 +8,18 @@ import (
 	"github.com/lenguti/ezuzu/foundation/api"
 )
 
+const (
+	managerIDPathParam  = "managerId"
+	propertyIDPathParam = "propertyId"
+)
+
 // Routes - route definitions for v1.
 func (c *Controller) Routes() *api.Router {
 	const version = "v1"
 
 	c.router.Handle(http.MethodGet, version, "/status", c.status)
+
+	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties/:propertyId/invoices", c.CreateInvoice)
 
 	return c.router
 }
