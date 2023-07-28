@@ -28,6 +28,31 @@ func (c *Core) Create(ctx context.Context, nt NewTennant, propertyID uuid.UUID) 
 	return t, nil
 }
 
+// Update - will update a tennant.
+func (c *Core) Update(ctx context.Context, id uuid.UUID, ut UpdateTennant) (Tennant, error) {
+	t, err := c.Get(ctx, id)
+	if err != nil {
+		return Tennant{}, fmt.Errorf("update: unable to fetch tennant: %w", err)
+	}
+
+	if ut.PropertyID != nil {
+		p, err := c.pc.Get(ctx, *ut.PropertyID)
+		if err != nil {
+			return Tennant{}, fmt.Errorf("update: unable to fetch property: %w", err)
+		}
+		t.PropertyID = p.ID
+	}
+
+	if ut.Type != nil {
+		t.Type = *ut.Type
+	}
+	t.UpdatedAt = time.Now().UTC()
+	if err := c.store.Update(ctx, t); err != nil {
+		return Tennant{}, fmt.Errorf("update: unable to update tennant: %w", err)
+	}
+	return t, nil
+}
+
 // Get - will get a tennant by the provided id.
 func (c *Core) Get(ctx context.Context, id uuid.UUID) (Tennant, error) {
 	t, err := c.store.Get(ctx, id.String())

@@ -22,9 +22,11 @@ func (c *Controller) Routes() *api.Router {
 
 	c.router.Handle(http.MethodPost, version, "/managers", c.CreateManager)
 	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties", c.CreateProperty)
+	c.router.Handle(http.MethodPatch, version, "/managers/:managerId/properties/:propertyId", c.UpdateProperty)
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties", c.ListProperties)
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId", c.GetProperty)
 	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties/:propertyId/tennants", c.CreateTennant)
+	c.router.Handle(http.MethodPatch, version, "/managers/:managerId/properties/:propertyId/tennants/:tennantId", c.UpdateTennant)
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId/tennants/:tennantId", c.GetTennant)
 	c.router.Handle(http.MethodGet, version, "/managers/:managerId/properties/:propertyId/tennants", c.ListTennants)
 

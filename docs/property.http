@@ -29,6 +29,15 @@ Content-Type: application/json
 GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}
 
 ###
+# @name updateProperty
+PATCH http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}
+Content-Type: application/json
+
+{
+    "name": "new biz apartment"
+}
+
+###
 # @name listProperties
 GET http://localhost:8001/v1/managers/{{managerId}}/properties
 
@@ -49,6 +58,16 @@ Content-Type: application/json
 # @name getTennant
 @tennantId = {{createTennant.response.body.$.tennant.id}}
 GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants/{{tennantId}}
+
+###
+# @name updateTennant
+PATCH http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants/{{tennantId}}
+Content-Type: application/json
+
+{
+    "newPropertyId": "96e98f4f-e4a5-4d9c-9077-507f633d218c",
+    "type": "SECONDARY"
+}
 
 ###
 # @name listTennants

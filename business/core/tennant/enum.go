@@ -10,6 +10,11 @@ func (t Type) String() string {
 	return string(t)
 }
 
+func ToPtrType(v string) *Type {
+	t := Type(v)
+	return &t
+}
+
 const (
 	TypePrimary   = "PRIMARY"
 	TypeSecondary = "SECONDARY"

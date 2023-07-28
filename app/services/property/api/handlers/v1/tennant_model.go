@@ -1,6 +1,9 @@
 package v1
 
-import "github.com/lenguti/ezuzu/business/core/tennant"
+import (
+	"github.com/google/uuid"
+	"github.com/lenguti/ezuzu/business/core/tennant"
+)
 
 // ClientTennant - represents a client tennant entity.
 type ClientTennant struct {
@@ -23,6 +26,18 @@ func toCoreNewTennant(input CreateTennantRequest) tennant.NewTennant {
 		Type:        tennant.Type(input.Type),
 	}
 	return newTennant
+}
+
+func toCoreUpdateTennant(input UpdateTennantRequest) tennant.UpdateTennant {
+	var updateTennant tennant.UpdateTennant
+	if input.NewPropertyID != nil {
+		uid := uuid.MustParse(*input.NewPropertyID)
+		updateTennant.PropertyID = &uid
+	}
+	if input.Type != nil {
+		updateTennant.Type = tennant.ToPtrType(*input.Type)
+	}
+	return updateTennant
 }
 
 func toClientTennants(input []tennant.Tennant) []ClientTennant {

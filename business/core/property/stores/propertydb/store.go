@@ -53,6 +53,22 @@ func (s *Store) Create(ctx context.Context, p property.Property) error {
 	return nil
 }
 
+// UpdateName - will update a property record with a new name.
+func (s *Store) UpdateName(ctx context.Context, p property.Property) error {
+	dbProperty := toDBProperty(p)
+	const q = `
+	UPDATE property
+	SET
+	name = :name,
+	updated_at = :updated_at
+	WHERE id = :id
+	`
+	if err := s.db.Exec(ctx, q, dbProperty); err != nil {
+		return fmt.Errorf("update name: failed to update property: %w", err)
+	}
+	return nil
+}
+
 // Get - will fetch a property by its id.
 func (s *Store) Get(ctx context.Context, id string) (property.Property, error) {
 	const q = `

@@ -55,6 +55,23 @@ func (s *Store) Create(ctx context.Context, t tennant.Tennant) error {
 	return nil
 }
 
+// Update - will update a tennant record with new values.
+func (s *Store) Update(ctx context.Context, t tennant.Tennant) error {
+	dbTennant := toDBTennant(t)
+	const q = `
+	UPDATE tennant
+	SET
+	property_id = :property_id,
+	type = :type,
+	updated_at = :updated_at
+	WHERE id = :id
+	`
+	if err := s.db.Exec(ctx, q, dbTennant); err != nil {
+		return fmt.Errorf("update: failed to update tennant: %w", err)
+	}
+	return nil
+}
+
 // Get - will fetch a tennant by its id.
 func (s *Store) Get(ctx context.Context, id string) (tennant.Tennant, error) {
 	const q = `

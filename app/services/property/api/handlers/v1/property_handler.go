@@ -57,7 +57,7 @@ func (cpr *CreatePropertyRequest) validate() *api.ValidationError {
 	}
 
 	if err := property.ParseType(cpr.Type); err != nil {
-		e.Add("type", "invalid property type")
+		e.Add("type", fmt.Sprintf("invalid property type [%s, %s]", property.TypeHome, property.TypeApartment))
 	}
 
 	if property.Type(cpr.Type) == property.TypeApartment {
@@ -103,6 +103,63 @@ func (c *Controller) CreateProperty(ctx context.Context, w http.ResponseWriter, 
 
 	c.log.Info().Msg("Successfully created Property.")
 	return api.Respond(w, http.StatusCreated, CreatePropertyResponse{Property: toClientProperty(p)})
+}
+
+// UpdatePropertyRequest - represents input for updating an existing property.
+type UpdatePropertyRequest struct {
+	Name string `json:"name"`
+}
+
+func (upr *UpdatePropertyRequest) validate() *api.ValidationError {
+	e := api.NewValidationError()
+	if upr.Name == "" {
+		e.Add("name", "is required")
+	}
+	return e
+}
+
+// UpdatePropertyResponse - represents a client update property response.
+type UpdatePropertyResponse struct {
+	Property ClientProperty `json:"property"`
+}
+
+// UpdateProperty - invoked by PATCH /v1/managers/:id/properties/:id.
+func (c *Controller) UpdateProperty(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Updating Property.")
+
+	var input UpdatePropertyRequest
+	if err := api.Decode(r, &input); err != nil {
+		c.log.Err(err).Msg("Unable to decode update property request.")
+		return api.BadRequestError("Invalid input.", err, nil)
+	}
+
+	if validated := input.validate(); !validated.IsClean() {
+		c.log.Err(validated).Msg("Validation input failed.")
+		return api.BadRequestError("Invalid input.", validated, validated.Details())
+	}
+
+	if _, err := uuid.Parse(api.PathParam(r, managerIDPathParam)); err != nil {
+		c.log.Err(err).Msg("Invalid manager id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	pID, err := uuid.Parse(api.PathParam(r, propertyIDPathParam))
+	if err != nil {
+		c.log.Err(err).Msg("Invalid property id.")
+		return api.BadRequestError("Invalid id.", err, nil)
+	}
+
+	p, err := c.Property.UpdateName(ctx, pID, input.Name)
+	if err != nil {
+		c.log.Err(err).Msg("Unable to update property.")
+		if errors.Is(err, core.ErrNotFound) {
+			return api.NotFoundError("Item not found.", err, nil)
+		}
+		return api.InternalServerError("Error.", err, nil)
+	}
+
+	c.log.Info().Msg("Successfully updated Property.")
+	return api.Respond(w, http.StatusOK, UpdatePropertyResponse{Property: toClientProperty(p)})
 }
 
 // GetPropertyResponse - represents a client get property response.

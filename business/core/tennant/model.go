@@ -27,3 +27,9 @@ type NewTennant struct {
 	SSN         int
 	Type        Type
 }
+
+// UpdateTennant - represents fields needed to update an existing tennant.
+type UpdateTennant struct {
+	PropertyID *uuid.UUID
+	Type       *Type
+}

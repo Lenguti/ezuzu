@@ -43,7 +43,7 @@ func NewController(log zerolog.Logger, cfg Config) (*Controller, error) {
 
 	mc := manager.NewCore(managerdb.NewStore(ddb), log)
 	pc := property.NewCore(propertydb.NewStore(ddb), log)
-	tc := tennant.NewCore(tennantdb.NewStore(ddb), log)
+	tc := tennant.NewCore(tennantdb.NewStore(ddb), pc, log)
 
 	return &Controller{
 		Manager:  mc,
