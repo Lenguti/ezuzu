@@ -1,13 +1,13 @@
-package tennantdb
+package tenantdb
 
 import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lenguti/ezuzu/business/core/tennant"
+	"github.com/lenguti/ezuzu/business/core/tenant"
 )
 
-type dbTennant struct {
+type dbTenant struct {
 	ID          string `db:"id"`
 	PropertyID  string `db:"property_id"`
 	FirstName   string `db:"first_name"`
@@ -19,8 +19,8 @@ type dbTennant struct {
 	UpdatedAt   int64  `db:"updated_at"`
 }
 
-func toDBTennant(t tennant.Tennant) dbTennant {
-	return dbTennant{
+func toDBTenant(t tenant.Tenant) dbTenant {
+	return dbTenant{
 		ID:          t.ID.String(),
 		PropertyID:  t.PropertyID.String(),
 		FirstName:   t.FirstName,
@@ -33,23 +33,23 @@ func toDBTennant(t tennant.Tennant) dbTennant {
 	}
 }
 
-func toCoreTennants(dbtts []dbTennant) []tennant.Tennant {
-	tts := make([]tennant.Tennant, 0, len(dbtts))
+func toCoreTenants(dbtts []dbTenant) []tenant.Tenant {
+	tts := make([]tenant.Tenant, 0, len(dbtts))
 	for _, t := range dbtts {
-		tts = append(tts, toCoreTennant(t))
+		tts = append(tts, toCoreTenant(t))
 	}
 	return tts
 }
 
-func toCoreTennant(dbt dbTennant) tennant.Tennant {
-	return tennant.Tennant{
+func toCoreTenant(dbt dbTenant) tenant.Tenant {
+	return tenant.Tenant{
 		ID:          uuid.MustParse(dbt.ID),
 		PropertyID:  uuid.MustParse(dbt.PropertyID),
 		FirstName:   dbt.FirstName,
 		LastName:    dbt.LastName,
 		DateOfBirth: dbt.DateOfBirth,
 		SSN:         dbt.SSN,
-		Type:        tennant.Type(dbt.Type),
+		Type:        tenant.Type(dbt.Type),
 		CreatedAt:   time.Unix(dbt.CreatedAt, 0),
 		UpdatedAt:   time.Unix(dbt.UpdatedAt, 0),
 	}

@@ -7,8 +7,8 @@ import (
 	"github.com/lenguti/ezuzu/business/core/manager/stores/managerdb"
 	"github.com/lenguti/ezuzu/business/core/property"
 	"github.com/lenguti/ezuzu/business/core/property/stores/propertydb"
-	"github.com/lenguti/ezuzu/business/core/tennant"
-	"github.com/lenguti/ezuzu/business/core/tennant/stores/tennantdb"
+	"github.com/lenguti/ezuzu/business/core/tenant"
+	"github.com/lenguti/ezuzu/business/core/tenant/stores/tenantdb"
 	"github.com/lenguti/ezuzu/business/data/db"
 	"github.com/lenguti/ezuzu/foundation/api"
 	"github.com/rs/zerolog"
@@ -18,7 +18,7 @@ import (
 type Controller struct {
 	Manager  *manager.Core
 	Property *property.Core
-	Tennant  *tennant.Core
+	Tenant   *tenant.Core
 
 	db     *db.DB
 	config Config
@@ -43,12 +43,12 @@ func NewController(log zerolog.Logger, cfg Config) (*Controller, error) {
 
 	mc := manager.NewCore(managerdb.NewStore(ddb), log)
 	pc := property.NewCore(propertydb.NewStore(ddb), log)
-	tc := tennant.NewCore(tennantdb.NewStore(ddb), pc, log)
+	tc := tenant.NewCore(tenantdb.NewStore(ddb), pc, log)
 
 	return &Controller{
 		Manager:  mc,
 		Property: pc,
-		Tennant:  tc,
+		Tenant:   tc,
 
 		db:     ddb,
 		config: cfg,

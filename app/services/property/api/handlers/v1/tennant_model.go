@@ -2,11 +2,11 @@ package v1
 
 import (
 	"github.com/google/uuid"
-	"github.com/lenguti/ezuzu/business/core/tennant"
+	"github.com/lenguti/ezuzu/business/core/tenant"
 )
 
-// ClientTennant - represents a client tennant entity.
-type ClientTennant struct {
+// ClientTenant - represents a client tenant entity.
+type ClientTenant struct {
 	ID          string `json:"id"`
 	Type        string `json:"type"`
 	FirstName   string `json:"firstName"`
@@ -17,39 +17,39 @@ type ClientTennant struct {
 	UpdatedAt   int64  `json:"updatedAt"`
 }
 
-func toCoreNewTennant(input CreateTennantRequest) tennant.NewTennant {
-	newTennant := tennant.NewTennant{
+func toCoreNewTenant(input CreateTenantRequest) tenant.NewTenant {
+	newTenant := tenant.NewTenant{
 		FirstName:   input.FirstName,
 		LastName:    input.LastName,
 		DateOfBirth: input.DateOfBirth,
 		SSN:         input.SSN,
-		Type:        tennant.Type(input.Type),
+		Type:        tenant.Type(input.Type),
 	}
-	return newTennant
+	return newTenant
 }
 
-func toCoreUpdateTennant(input UpdateTennantRequest) tennant.UpdateTennant {
-	var updateTennant tennant.UpdateTennant
+func toCoreUpdateTenant(input UpdateTenantRequest) tenant.UpdateTenant {
+	var updateTenant tenant.UpdateTenant
 	if input.NewPropertyID != nil {
 		uid := uuid.MustParse(*input.NewPropertyID)
-		updateTennant.PropertyID = &uid
+		updateTenant.PropertyID = &uid
 	}
 	if input.Type != nil {
-		updateTennant.Type = tennant.ToPtrType(*input.Type)
+		updateTenant.Type = tenant.ToPtrType(*input.Type)
 	}
-	return updateTennant
+	return updateTenant
 }
 
-func toClientTennants(input []tennant.Tennant) []ClientTennant {
-	ctts := make([]ClientTennant, 0, len(input))
+func toClientTenants(input []tenant.Tenant) []ClientTenant {
+	ctts := make([]ClientTenant, 0, len(input))
 	for _, ct := range input {
-		ctts = append(ctts, toClientTennant(ct))
+		ctts = append(ctts, toClientTenant(ct))
 	}
 	return ctts
 }
 
-func toClientTennant(input tennant.Tennant) ClientTennant {
-	return ClientTennant{
+func toClientTenant(input tenant.Tenant) ClientTenant {
+	return ClientTenant{
 		ID:          input.ID.String(),
 		Type:        input.Type.String(),
 		FirstName:   input.FirstName,

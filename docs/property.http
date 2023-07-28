@@ -42,8 +42,8 @@ Content-Type: application/json
 GET http://localhost:8001/v1/managers/{{managerId}}/properties
 
 ###
-# @name createTennant
-POST http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants
+# @name createTenant
+POST http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tenants
 Content-Type: application/json
 
 {
@@ -55,13 +55,13 @@ Content-Type: application/json
 }
 
 ###
-# @name getTennant
-@tennantId = {{createTennant.response.body.$.tennant.id}}
-GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants/{{tennantId}}
+# @name getTenant
+@tenantId = {{createTenant.response.body.$.tenant.id}}
+GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tenants/{{tenantId}}
 
 ###
-# @name updateTennant
-PATCH http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants/{{tennantId}}
+# @name updateTenant
+PATCH http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tenants/{{tenantId}}
 Content-Type: application/json
 
 {
@@ -70,5 +70,5 @@ Content-Type: application/json
 }
 
 ###
-# @name listTennants
-GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tennants
+# @name listTenants
+GET http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}/tenants

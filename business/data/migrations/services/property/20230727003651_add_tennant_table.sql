@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE tennant (
+CREATE TABLE tenant (
     id uuid NOT NULL,
     property_id uuid NOT NULL,
     type text,
@@ -17,5 +17,5 @@ CREATE TABLE tennant (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE tennant;
+DROP TABLE tenant;
 -- +goose StatementEnd

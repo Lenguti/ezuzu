@@ -1,10 +1,10 @@
 FROM       golang:1.20.3 as builder
 WORKDIR    /src/
 COPY       . ./
-RUN        CGO_ENABLED=0 go build -o bin/tennant_portal ./app/services/tennant_portal
+RUN        CGO_ENABLED=0 go build -o bin/tenant_portal ./app/services/tenant_portal
 
 FROM       scratch
 WORKDIR    /go/
-COPY       --from=builder /src/bin/tennant_portal ./
+COPY       --from=builder /src/bin/tenant_portal ./
 EXPOSE     8002
-ENTRYPOINT ["./tennant_portal"]
+ENTRYPOINT ["./tenant_portal"]

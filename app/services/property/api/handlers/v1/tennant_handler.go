@@ -10,12 +10,12 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lenguti/ezuzu/business/core"
-	"github.com/lenguti/ezuzu/business/core/tennant"
+	"github.com/lenguti/ezuzu/business/core/tenant"
 	"github.com/lenguti/ezuzu/foundation/api"
 )
 
-// CreateTennantRequest - represents input for creating a new tennant.
-type CreateTennantRequest struct {
+// CreateTenantRequest - represents input for creating a new tenant.
+type CreateTenantRequest struct {
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	Type        string `json:"type"`
@@ -23,7 +23,7 @@ type CreateTennantRequest struct {
 	SSN         int    `json:"ssn"`
 }
 
-func (ctr *CreateTennantRequest) validate() *api.ValidationError {
+func (ctr *CreateTenantRequest) validate() *api.ValidationError {
 	e := api.NewValidationError()
 
 	if ctr.FirstName == "" {
@@ -34,8 +34,8 @@ func (ctr *CreateTennantRequest) validate() *api.ValidationError {
 		e.Add("last_name", "is required")
 	}
 
-	if err := tennant.ParseType(ctr.Type); err != nil {
-		e.Add("type", fmt.Sprintf("invalid tennant type, [%s, %s]", tennant.TypePrimary, tennant.TypeSecondary))
+	if err := tenant.ParseType(ctr.Type); err != nil {
+		e.Add("type", fmt.Sprintf("invalid tenant type, [%s, %s]", tenant.TypePrimary, tenant.TypeSecondary))
 	}
 
 	re := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
@@ -49,18 +49,18 @@ func (ctr *CreateTennantRequest) validate() *api.ValidationError {
 	return e
 }
 
-// CreateTennantResponse - represents a client create tennant response.
-type CreateTennantResponse struct {
-	Tennant ClientTennant `json:"tennant"`
+// CreateTenantResponse - represents a client create tenant response.
+type CreateTenantResponse struct {
+	Tenant ClientTenant `json:"tenant"`
 }
 
-// CreateTennant - invoked by POST /v1/managers/:id/properties/:id/tennants.
-func (c *Controller) CreateTennant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	c.log.Info().Msg("Creating Tennant.")
+// CreateTenant - invoked by POST /v1/managers/:id/properties/:id/tenants.
+func (c *Controller) CreateTenant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Creating Tenant.")
 
-	var input CreateTennantRequest
+	var input CreateTenantRequest
 	if err := api.Decode(r, &input); err != nil {
-		c.log.Err(err).Msg("Unable to decode create tennant request.")
+		c.log.Err(err).Msg("Unable to decode create tenant request.")
 		return api.BadRequestError("Invalid input.", err, nil)
 	}
 
@@ -80,27 +80,27 @@ func (c *Controller) CreateTennant(ctx context.Context, w http.ResponseWriter, r
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	t, err := c.Tennant.Create(ctx, toCoreNewTennant(input), pID)
+	t, err := c.Tenant.Create(ctx, toCoreNewTenant(input), pID)
 	if err != nil {
-		c.log.Err(err).Msg("Unable to create tennant.")
+		c.log.Err(err).Msg("Unable to create tenant.")
 		return api.InternalServerError("Error.", err, nil)
 	}
 
-	c.log.Info().Msg("Successfully created Tennant.")
-	return api.Respond(w, http.StatusCreated, CreateTennantResponse{Tennant: toClientTennant(t)})
+	c.log.Info().Msg("Successfully created Tenant.")
+	return api.Respond(w, http.StatusCreated, CreateTenantResponse{Tenant: toClientTenant(t)})
 }
 
-// UpdateTennantRequest - represents input for updating an existing tennant.
-type UpdateTennantRequest struct {
+// UpdateTenantRequest - represents input for updating an existing tenant.
+type UpdateTenantRequest struct {
 	NewPropertyID *string `json:"newPropertyId"`
 	Type          *string `json:"type"`
 }
 
-func (utr *UpdateTennantRequest) validate() *api.ValidationError {
+func (utr *UpdateTenantRequest) validate() *api.ValidationError {
 	e := api.NewValidationError()
 	if utr.Type != nil {
-		if err := tennant.ParseType(*utr.Type); err != nil {
-			e.Add("type", "invalid tennant type")
+		if err := tenant.ParseType(*utr.Type); err != nil {
+			e.Add("type", "invalid tenant type")
 		}
 	}
 
@@ -116,18 +116,18 @@ func (utr *UpdateTennantRequest) validate() *api.ValidationError {
 	return e
 }
 
-// UpdateTennantResponse - represents a client update tennant response.
-type UpdateTennantResponse struct {
-	Tennant ClientTennant `json:"tennant"`
+// UpdateTenantResponse - represents a client update tenant response.
+type UpdateTenantResponse struct {
+	Tenant ClientTenant `json:"tenant"`
 }
 
-// UpdateTennant - invoked by PATCH /v1/managers/:id/properties/:id/tennants/:id.
-func (c *Controller) UpdateTennant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	c.log.Info().Msg("Updating Tennant.")
+// UpdateTenant - invoked by PATCH /v1/managers/:id/properties/:id/tenants/:id.
+func (c *Controller) UpdateTenant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Updating Tenant.")
 
-	var input UpdateTennantRequest
+	var input UpdateTenantRequest
 	if err := api.Decode(r, &input); err != nil {
-		c.log.Err(err).Msg("Unable to decode update tennant request.")
+		c.log.Err(err).Msg("Unable to decode update tenant request.")
 		return api.BadRequestError("Invalid input.", err, nil)
 	}
 
@@ -146,15 +146,15 @@ func (c *Controller) UpdateTennant(ctx context.Context, w http.ResponseWriter, r
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	tID, err := uuid.Parse(api.PathParam(r, tennantIDPathParam))
+	tID, err := uuid.Parse(api.PathParam(r, tenantIDPathParam))
 	if err != nil {
-		c.log.Err(err).Msg("Invalid tennant id.")
+		c.log.Err(err).Msg("Invalid tenant id.")
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	t, err := c.Tennant.Update(ctx, tID, toCoreUpdateTennant(input))
+	t, err := c.Tenant.Update(ctx, tID, toCoreUpdateTenant(input))
 	if err != nil {
-		c.log.Err(err).Msg("Unable to update tennant.")
+		c.log.Err(err).Msg("Unable to update tenant.")
 		if errors.Is(err, core.ErrNotFound) {
 			return api.NotFoundError("Item not found.", err, nil)
 		}
@@ -162,17 +162,17 @@ func (c *Controller) UpdateTennant(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	c.log.Info().Msg("Successfully updated Property.")
-	return api.Respond(w, http.StatusOK, UpdateTennantResponse{Tennant: toClientTennant(t)})
+	return api.Respond(w, http.StatusOK, UpdateTenantResponse{Tenant: toClientTenant(t)})
 }
 
-// GetTennantResponse - represents a client get tennant response.
-type GetTennantResponse struct {
-	Tennant ClientTennant `json:"tennant"`
+// GetTenantResponse - represents a client get tenant response.
+type GetTenantResponse struct {
+	Tenant ClientTenant `json:"tenant"`
 }
 
-// GetTennant - invoked by GET /v1/managers/:id/properties/:id/tennants/:id.
-func (c *Controller) GetTennant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	c.log.Info().Msg("Fetching Tennant.")
+// GetTenant - invoked by GET /v1/managers/:id/properties/:id/tenants/:id.
+func (c *Controller) GetTenant(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Fetching Tenant.")
 
 	if _, err := uuid.Parse(api.PathParam(r, managerIDPathParam)); err != nil {
 		c.log.Err(err).Msg("Invalid manager id.")
@@ -184,33 +184,33 @@ func (c *Controller) GetTennant(ctx context.Context, w http.ResponseWriter, r *h
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	tID, err := uuid.Parse(api.PathParam(r, tennantIDPathParam))
+	tID, err := uuid.Parse(api.PathParam(r, tenantIDPathParam))
 	if err != nil {
-		c.log.Err(err).Msg("Invalid tennant id.")
+		c.log.Err(err).Msg("Invalid tenant id.")
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	t, err := c.Tennant.Get(ctx, tID)
+	t, err := c.Tenant.Get(ctx, tID)
 	if err != nil {
-		c.log.Err(err).Msg("Unable to get tennant.")
+		c.log.Err(err).Msg("Unable to get tenant.")
 		if errors.Is(err, core.ErrNotFound) {
 			return api.NotFoundError("Item not found.", err, nil)
 		}
 		return api.InternalServerError("Error.", err, nil)
 	}
 
-	c.log.Info().Msg("Successfully Fetched Tennant.")
-	return api.Respond(w, http.StatusOK, GetTennantResponse{Tennant: toClientTennant(t)})
+	c.log.Info().Msg("Successfully Fetched Tenant.")
+	return api.Respond(w, http.StatusOK, GetTenantResponse{Tenant: toClientTenant(t)})
 }
 
-// ListTennantsResponse - represents a client list tennant response.
-type ListTennantsResponse struct {
-	Tennants []ClientTennant `json:"tennants"`
+// ListTenantsResponse - represents a client list tenant response.
+type ListTenantsResponse struct {
+	Tenants []ClientTenant `json:"tenants"`
 }
 
-// ListTennants - invoked by GET /v1/managers/:id/properties/:id/tennants.
-func (c *Controller) ListTennants(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	c.log.Info().Msg("Listing Tennants.")
+// ListTenants - invoked by GET /v1/managers/:id/properties/:id/tenants.
+func (c *Controller) ListTenants(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	c.log.Info().Msg("Listing Tenants.")
 
 	if _, err := uuid.Parse(api.PathParam(r, managerIDPathParam)); err != nil {
 		c.log.Err(err).Msg("Invalid manager id.")
@@ -223,12 +223,12 @@ func (c *Controller) ListTennants(ctx context.Context, w http.ResponseWriter, r 
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	tts, err := c.Tennant.List(ctx, pID)
+	tts, err := c.Tenant.List(ctx, pID)
 	if err != nil {
-		c.log.Err(err).Msg("Unable to list tennants.")
+		c.log.Err(err).Msg("Unable to list tenants.")
 		return api.InternalServerError("Error.", err, nil)
 	}
 
-	c.log.Info().Msg("Successfully Listed Tennants.")
-	return api.Respond(w, http.StatusOK, ListTennantsResponse{Tennants: toClientTennants(tts)})
+	c.log.Info().Msg("Successfully Listed Tenants.")
+	return api.Respond(w, http.StatusOK, ListTenantsResponse{Tenants: toClientTenants(tts)})
 }

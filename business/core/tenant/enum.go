@@ -1,8 +1,8 @@
-package tennant
+package tenant
 
 import "fmt"
 
-// Type - represents tennant type enum.
+// Type - represents tenant type enum.
 type Type string
 
 // String - returns string representation of type.
@@ -20,15 +20,15 @@ const (
 	TypeSecondary = "SECONDARY"
 )
 
-var validTennantType = map[Type]struct{}{
+var validTenantType = map[Type]struct{}{
 	TypePrimary:   {},
 	TypeSecondary: {},
 }
 
 // ParseType - will attempt to validate the provided type.
 func ParseType(v string) error {
-	if _, ok := validTennantType[Type(v)]; !ok {
-		return fmt.Errorf("parse type: invalid tennant type")
+	if _, ok := validTenantType[Type(v)]; !ok {
+		return fmt.Errorf("parse type: invalid tenant type")
 	}
 	return nil
 }

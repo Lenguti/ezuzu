@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	v1 "github.com/lenguti/ezuzu/app/services/tennant_portal/api/handlers/v1"
+	v1 "github.com/lenguti/ezuzu/app/services/tenant_portal/api/handlers/v1"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog"
 )

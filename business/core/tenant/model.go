@@ -1,4 +1,4 @@
-package tennant
+package tenant
 
 import (
 	"time"
@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// Tennant - represents a business domain tennant.
-type Tennant struct {
+// Tenant - represents a business domain tenant.
+type Tenant struct {
 	ID          uuid.UUID
 	PropertyID  uuid.UUID
 	FirstName   string
@@ -19,8 +19,8 @@ type Tennant struct {
 	UpdatedAt   time.Time
 }
 
-// NewTennant - represents fields needed to create a new tennant.
-type NewTennant struct {
+// NewTenant - represents fields needed to create a new tenant.
+type NewTenant struct {
 	FirstName   string
 	LastName    string
 	DateOfBirth string
@@ -28,8 +28,8 @@ type NewTennant struct {
 	Type        Type
 }
 
-// UpdateTennant - represents fields needed to update an existing tennant.
-type UpdateTennant struct {
+// UpdateTenant - represents fields needed to update an existing tenant.
+type UpdateTenant struct {
 	PropertyID *uuid.UUID
 	Type       *Type
 }
