@@ -48,32 +48,7 @@ services:
       - ${PROPERTY_DB_PORT}:5432
     volumes:
       - property-db:/var/lib/postgresql/data
-
-  tenant_portal:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/dockerfile.tenant_portal
-    env_file: .env.tenant_portal
-    environment:
-      DB_HOST: tenant_portal_db
-    ports:
-      - "8002:8002"
-    links:
-      - tenant_portal_db
-  tenant_portal_db:
-    image: postgres:alpine
-    env_file: .env
-    environment:
-      - POSTGRES_USER=${TENANT_PORTAL_DB_USER}
-      - POSTGRES_PASSWORD=${TENANT_PORTAL_DB_PASS}
-      - POSTGRES_DB=${TENANT_PORTAL_DB_NAME}
-      - POSTGRES_PORT=${TENANT_PORTAL_DB_PORT}
-    ports:
-      - ${TENANT_PORTAL_DB_PORT}:5432
-    volumes:
-      - tenant-portal-db:/var/lib/postgresql/data
   
 volumes:
   payments-db:
   property-db:
-  tenant-portal-db:
