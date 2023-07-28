@@ -16,6 +16,7 @@ func (c *Core) Create(ctx context.Context, np NewProperty, managerID uuid.UUID) 
 		ManagerID:  managerID,
 		Address:    np.Address,
 		Name:       np.Name,
+		Rent:       np.Rent,
 		Type:       np.Type,
 		UnitNumber: np.UnitNumber,
 		CreatedAt:  now,
@@ -27,18 +28,22 @@ func (c *Core) Create(ctx context.Context, np NewProperty, managerID uuid.UUID) 
 	return p, nil
 }
 
-// UpdateName - will update the name of a property.
-func (c *Core) UpdateName(ctx context.Context, id uuid.UUID, name string) (Property, error) {
+// UpdateName - will update the property.
+func (c *Core) UpdateName(ctx context.Context, id uuid.UUID, up UpdateProperty) (Property, error) {
 	p, err := c.Get(ctx, id)
 	if err != nil {
 		return Property{}, fmt.Errorf("update name: unable to fetch property: %w", err)
 	}
 
-	now := time.Now().UTC()
-	p.Name = name
-	p.UpdatedAt = now
-	if err := c.store.UpdateName(ctx, p); err != nil {
-		return Property{}, fmt.Errorf("update name: unable to update property: %w", err)
+	if up.Name != nil {
+		p.Name = *up.Name
+	}
+	if up.Rent != nil {
+		p.Rent = *up.Rent
+	}
+	p.UpdatedAt = time.Now().UTC()
+	if err := c.store.Update(ctx, p); err != nil {
+		return Property{}, fmt.Errorf("update: unable to update property: %w", err)
 	}
 	return p, nil
 }

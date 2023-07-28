@@ -16,13 +16,14 @@ import (
 
 // CreatePropertyRequest - represents input for creating a new property.
 type CreatePropertyRequest struct {
-	Street     string `json:"street"`
-	City       string `json:"city"`
-	State      string `json:"state"`
-	PostalCode string `json:"postalCode"`
-	Name       string `json:"name"`
-	Type       string `json:"type"`
-	UnitNumber *int   `json:"unitNumber"`
+	Street     string  `json:"street"`
+	City       string  `json:"city"`
+	State      string  `json:"state"`
+	PostalCode string  `json:"postalCode"`
+	Name       string  `json:"name"`
+	Rent       float64 `json:"rent"`
+	Type       string  `json:"type"`
+	UnitNumber *int    `json:"unitNumber"`
 
 	formattedAddress string
 }
@@ -54,6 +55,10 @@ func (cpr *CreatePropertyRequest) validate() *api.ValidationError {
 
 	if cpr.Name == "" {
 		e.Add("name", "is required")
+	}
+
+	if cpr.Rent <= 0 {
+		e.Add("rent", "needs to be greater than 0")
 	}
 
 	if err := property.ParseType(cpr.Type); err != nil {
@@ -107,13 +112,20 @@ func (c *Controller) CreateProperty(ctx context.Context, w http.ResponseWriter, 
 
 // UpdatePropertyRequest - represents input for updating an existing property.
 type UpdatePropertyRequest struct {
-	Name string `json:"name"`
+	Name *string  `json:"name"`
+	Rent *float64 `json:"rent"`
 }
 
 func (upr *UpdatePropertyRequest) validate() *api.ValidationError {
 	e := api.NewValidationError()
-	if upr.Name == "" {
-		e.Add("name", "is required")
+	if upr.Name != nil && *upr.Name == "" {
+		e.Add("name", "cannot be empty")
+	}
+	if upr.Rent != nil && *upr.Rent <= 0 {
+		e.Add("rent", "needs to be greater than 0")
+	}
+	if upr.Name == nil && upr.Rent == nil {
+		e.Add("input", "must provided update values")
 	}
 	return e
 }
@@ -149,7 +161,7 @@ func (c *Controller) UpdateProperty(ctx context.Context, w http.ResponseWriter, 
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	p, err := c.Property.UpdateName(ctx, pID, input.Name)
+	p, err := c.Property.UpdateName(ctx, pID, toCoreUpdateProperty(input))
 	if err != nil {
 		c.log.Err(err).Msg("Unable to update property.")
 		if errors.Is(err, core.ErrNotFound) {

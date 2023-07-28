@@ -8,14 +8,15 @@ import (
 )
 
 type dbProperty struct {
-	ID         string `db:"id"`
-	ManagerID  string `db:"manager_id"`
-	Address    string `db:"address"`
-	Name       string `db:"name"`
-	Type       string `db:"type"`
-	UnitNumber *int   `db:"unit_number"`
-	CreatedAt  int64  `db:"created_at"`
-	UpdatedAt  int64  `db:"updated_at"`
+	ID         string  `db:"id"`
+	ManagerID  string  `db:"manager_id"`
+	Address    string  `db:"address"`
+	Name       string  `db:"name"`
+	Rent       float64 `db:"rent"`
+	Type       string  `db:"type"`
+	UnitNumber *int    `db:"unit_number"`
+	CreatedAt  int64   `db:"created_at"`
+	UpdatedAt  int64   `db:"updated_at"`
 }
 
 func toDBProperty(p property.Property) dbProperty {
@@ -24,6 +25,7 @@ func toDBProperty(p property.Property) dbProperty {
 		ManagerID:  p.ManagerID.String(),
 		Address:    p.Address,
 		Name:       p.Name,
+		Rent:       p.Rent,
 		Type:       p.Type.String(),
 		UnitNumber: p.UnitNumber,
 		CreatedAt:  p.CreatedAt.Unix(),
@@ -45,6 +47,7 @@ func toCoreProperty(dbp dbProperty) property.Property {
 		ManagerID:  uuid.MustParse(dbp.ManagerID),
 		Address:    dbp.Address,
 		Name:       dbp.Name,
+		Rent:       dbp.Rent,
 		Type:       property.Type(dbp.Type),
 		UnitNumber: dbp.UnitNumber,
 		CreatedAt:  time.Unix(dbp.CreatedAt, 0),

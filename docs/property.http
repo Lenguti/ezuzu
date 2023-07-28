@@ -17,6 +17,7 @@ Content-Type: application/json
     "street": "200 nw 95 street",
     "city": "plantation",
     "state": "fl",
+    "rent": 1000,
     "postalCode": "33324",
     "name": "biz apartment",
     "type": "APARTMENT",
@@ -34,7 +35,8 @@ PATCH http://localhost:8001/v1/managers/{{managerId}}/properties/{{propertyId}}
 Content-Type: application/json
 
 {
-    "name": "new biz apartment"
+    "name": "new biz apartment",
+    "rent": 500
 }
 
 ###

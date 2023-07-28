@@ -9,7 +9,7 @@ import (
 // Storer - represents the data layer behavior for property.
 type Storer interface {
 	Create(ctx context.Context, p Property) error
-	UpdateName(ctx context.Context, p Property) error
+	Update(ctx context.Context, p Property) error
 	Get(ctx context.Context, id string) (Property, error)
 	List(ctx context.Context, managerID string) ([]Property, error)
 }

@@ -32,6 +32,7 @@ func (s *Store) Create(ctx context.Context, p property.Property) error {
 		manager_id,
 		address,
 		name,
+		rent,
 		type,
 		unit_number,
 		created_at,
@@ -41,6 +42,7 @@ func (s *Store) Create(ctx context.Context, p property.Property) error {
 		:manager_id,
 		:address,
 		:name,
+		:rent,
 		:type,
 		:unit_number,
 		:created_at,
@@ -53,13 +55,14 @@ func (s *Store) Create(ctx context.Context, p property.Property) error {
 	return nil
 }
 
-// UpdateName - will update a property record with a new name.
-func (s *Store) UpdateName(ctx context.Context, p property.Property) error {
+// Update - will update a property record with new values.
+func (s *Store) Update(ctx context.Context, p property.Property) error {
 	dbProperty := toDBProperty(p)
 	const q = `
 	UPDATE property
 	SET
 	name = :name,
+	rent = :rent,
 	updated_at = :updated_at
 	WHERE id = :id
 	`

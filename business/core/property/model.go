@@ -12,6 +12,7 @@ type Property struct {
 	ManagerID  uuid.UUID
 	Address    string
 	Name       string
+	Rent       float64
 	Type       Type
 	UnitNumber *int
 	CreatedAt  time.Time
@@ -22,6 +23,13 @@ type Property struct {
 type NewProperty struct {
 	Address    string
 	Name       string
+	Rent       float64
 	Type       Type
 	UnitNumber *int
+}
+
+// UpdateProperty - represents fields needed to update an existing property.
+type UpdateProperty struct {
+	Name *string
+	Rent *float64
 }
