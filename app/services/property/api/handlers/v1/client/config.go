@@ -5,11 +5,13 @@ import (
 	"os"
 )
 
+// Config - client configuration.
 type Config struct {
 	Host string
 	Port string
 }
 
+// NewConfig - initalizes and parses env vars for configuration.
 func NewConfig() (Config, error) {
 	var (
 		cfg Config

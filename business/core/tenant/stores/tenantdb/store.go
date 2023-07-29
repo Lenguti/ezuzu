@@ -11,7 +11,7 @@ import (
 	"github.com/lenguti/ezuzu/business/data/db"
 )
 
-// Store - manages the set of apis for property manager database access.
+// Store - manages the set of apis for tenant database access.
 type Store struct {
 	db *db.DB
 }

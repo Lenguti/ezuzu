@@ -9,11 +9,13 @@ import (
 	v1 "github.com/lenguti/ezuzu/app/services/property/api/handlers/v1"
 )
 
+// Client - represents our client container.
 type Client struct {
 	cfg Config
 	hc  *http.Client
 }
 
+// NewClient - intialized a new client with provided config.
 func NewClient(cfg Config) *Client {
 	return &Client{
 		cfg: cfg,
@@ -21,6 +23,7 @@ func NewClient(cfg Config) *Client {
 	}
 }
 
+// GetProperty - will call property service to fetch a property by the provided id.
 func (c *Client) GetProperty(managerID, propertyID uuid.UUID) (v1.ClientProperty, error) {
 	url := fmt.Sprintf("http://%s:%s/v1/managers/%s/properties/%s", c.cfg.Host, c.cfg.Port, managerID, propertyID)
 	req, err := http.NewRequest(http.MethodGet, url, nil)

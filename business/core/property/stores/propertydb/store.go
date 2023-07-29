@@ -11,7 +11,7 @@ import (
 	"github.com/lenguti/ezuzu/business/data/db"
 )
 
-// Store - manages the set of apis for property manager database access.
+// Store - manages the set of apis for property database access.
 type Store struct {
 	db *db.DB
 }
@@ -67,7 +67,7 @@ func (s *Store) Update(ctx context.Context, p property.Property) error {
 	WHERE id = :id
 	`
 	if err := s.db.Exec(ctx, q, dbProperty); err != nil {
-		return fmt.Errorf("update name: failed to update property: %w", err)
+		return fmt.Errorf("update: failed to update property: %w", err)
 	}
 	return nil
 }

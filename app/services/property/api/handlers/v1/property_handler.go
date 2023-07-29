@@ -161,7 +161,7 @@ func (c *Controller) UpdateProperty(ctx context.Context, w http.ResponseWriter, 
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	p, err := c.Property.UpdateName(ctx, pID, toCoreUpdateProperty(input))
+	p, err := c.Property.Update(ctx, pID, toCoreUpdateProperty(input))
 	if err != nil {
 		c.log.Err(err).Msg("Unable to update property.")
 		if errors.Is(err, core.ErrNotFound) {

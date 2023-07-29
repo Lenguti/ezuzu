@@ -56,13 +56,3 @@ func (db *DB) List(ctx context.Context, data any, query string, vals ...string) 
 	}
 	return db.sql.SelectContext(ctx, data, query, ivals...)
 }
-
-// BeginTX - starts a db transaction.
-func (db *DB) BeginTx(ctx context.Context) *sqlx.Tx {
-	return db.sql.MustBeginTx(ctx, nil)
-}
-
-// CommitTx - commits a db transaction.
-func (db *DB) CommitTx(tx *sqlx.Tx) error {
-	return tx.Commit()
-}

@@ -28,11 +28,11 @@ func (c *Core) Create(ctx context.Context, np NewProperty, managerID uuid.UUID) 
 	return p, nil
 }
 
-// UpdateName - will update the property.
-func (c *Core) UpdateName(ctx context.Context, id uuid.UUID, up UpdateProperty) (Property, error) {
+// Update - will update the property.
+func (c *Core) Update(ctx context.Context, id uuid.UUID, up UpdateProperty) (Property, error) {
 	p, err := c.Get(ctx, id)
 	if err != nil {
-		return Property{}, fmt.Errorf("update name: unable to fetch property: %w", err)
+		return Property{}, fmt.Errorf("update: unable to fetch property: %w", err)
 	}
 
 	if up.Name != nil {

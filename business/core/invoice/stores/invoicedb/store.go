@@ -11,7 +11,7 @@ import (
 	"github.com/lenguti/ezuzu/business/data/db"
 )
 
-// Store - manages the set of apis for invoice manager database access.
+// Store - manages the set of apis for invoice database access.
 type Store struct {
 	db *db.DB
 }
