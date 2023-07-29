@@ -30,6 +30,8 @@ make migration SERVICE={{service}} DB_USER={{user}} DB_PASS={{pass}} DB_NAME={{n
 Documentation notes can be found here:
 https://whimsical.com/H3CwGrFebiSWYdSRDK3YEr
 
+To run tests please run `make test`
+
 ### Routes
 PROPERTY SERVICE			
 create manager	          POST	/v1/managers<br>
