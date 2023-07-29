@@ -33,7 +33,7 @@ https://whimsical.com/H3CwGrFebiSWYdSRDK3YEr
 To run tests please run `make test`
 
 ### Routes
-PROPERTY SERVICE			
+PROPERTY SERVICE<br>
 create manager	          POST	/v1/managers<br>
 create property	          POST	/v1/managers/:id/properties<br>
 update property	          PUT	/v1/managers/:id/properties/:id<br>
@@ -44,7 +44,7 @@ update tennant	          PUT	/v1/managers/:id/properties/:id/tenants/:id<br>
 get tennant               GET	/v1/managers/:id/properties/:id/tenants/:id<br>
 list tennants of property	GET	/v1/managers/:id/properties/:id/tenants<br>
 			
-PAYMENTS SERVICE			
+PAYMENTS SERVICE<br>		
 create invoice	POST	/v1/managers/:id/properties/:id/invoices<br>
 create payment	POST	/v1/tenants/:id/invoices/:id/payments<br>
 payment history	GET	/v1/tenants/:id/payments/history<br>
