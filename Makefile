@@ -26,4 +26,4 @@ migration :
 
 .PHONY : test
 test   :
-	@CGO_ENABLED=$(CGO_ENABLED) go test ./... --cover
+	@CGO_ENABLED=$(CGO_ENABLED) go test -v ./... --cover

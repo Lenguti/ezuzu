@@ -66,7 +66,7 @@ func (c *Controller) CreateInvoice(ctx context.Context, w http.ResponseWriter, r
 		return api.BadRequestError("Invalid id.", err, nil)
 	}
 
-	p, err := c.pc.GetProperty(mID, pID)
+	p, err := c.PC.GetProperty(mID, pID)
 	if err != nil {
 		c.log.Err(err).Msg("Unable to fetch property.")
 		return api.InternalServerError("Error.", err, nil)

@@ -9,6 +9,10 @@ import (
 	v1 "github.com/lenguti/ezuzu/app/services/property/api/handlers/v1"
 )
 
+type IProperty interface {
+	GetProperty(managerID, propertyID uuid.UUID) (v1.ClientProperty, error)
+}
+
 // Client - represents our client container.
 type Client struct {
 	cfg Config

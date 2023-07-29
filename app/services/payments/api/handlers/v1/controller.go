@@ -20,8 +20,8 @@ type Controller struct {
 	Invoice        *invoice.Core
 	Payment        *payment.Core
 	PaymentHistory *paymenthistory.Core
+	PC             client.IProperty
 
-	pc     *client.Client
 	db     *db.DB
 	config Config
 	log    zerolog.Logger
@@ -29,7 +29,7 @@ type Controller struct {
 }
 
 // NewController - initializes a new controller with all its services.
-func NewController(log zerolog.Logger, cfg Config, pc *client.Client) (*Controller, error) {
+func NewController(log zerolog.Logger, cfg Config, pc client.IProperty) (*Controller, error) {
 	ddb, err := db.New(db.Config{
 		User:         cfg.DBUser,
 		Password:     cfg.DBPass,
@@ -51,8 +51,8 @@ func NewController(log zerolog.Logger, cfg Config, pc *client.Client) (*Controll
 		Invoice:        ic,
 		Payment:        pymc,
 		PaymentHistory: phc,
+		PC:             pc,
 
-		pc:     pc,
 		config: cfg,
 		log:    log,
 		router: api.NewRouter(),
