@@ -8,7 +8,7 @@ import (
 	"github.com/lenguti/ezuzu/business/data/db"
 )
 
-// Store - manages the set of apis for payment manager database access.
+// Store - manages the set of apis for payment database access.
 type Store struct {
 	db *db.DB
 }
@@ -55,7 +55,7 @@ func (s *Store) ListByInvoice(ctx context.Context, invoiceID string) ([]payment.
 	`
 	var out []dbPayment
 	if err := s.db.List(ctx, &out, q, invoiceID); err != nil {
-		return nil, fmt.Errorf("create: failed to query payments: %w", err)
+		return nil, fmt.Errorf("list: failed to query payments: %w", err)
 	}
 	return toCorePayments(out), nil
 }

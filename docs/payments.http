@@ -17,3 +17,8 @@ Content-Type: application/json
 {
     "amount": 200
 }
+
+###
+# @name listPaymentHistory
+GET http://localhost:8000/v1/tenants/f81c2348-e72b-4f41-b764-eb92aa19f043/payments/history
+Content-Type: application/json

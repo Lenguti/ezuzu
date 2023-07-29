@@ -54,7 +54,7 @@ func (c *Core) Create(ctx context.Context, np NewPayment) (Payment, error) {
 func (c *Core) ListByInvoice(ctx context.Context, invoiceID uuid.UUID) ([]Payment, error) {
 	ps, err := c.store.ListByInvoice(ctx, invoiceID.String())
 	if err != nil {
-		return nil, fmt.Errorf("create: unable to list payments: %w", err)
+		return nil, fmt.Errorf("list by invoice: unable to list payments: %w", err)
 	}
 	return ps, nil
 }

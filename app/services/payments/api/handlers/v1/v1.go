@@ -23,6 +23,7 @@ func (c *Controller) Routes() *api.Router {
 
 	c.router.Handle(http.MethodPost, version, "/managers/:managerId/properties/:propertyId/invoices", c.CreateInvoice)
 	c.router.Handle(http.MethodPost, version, "/tenants/:tenantId/invoices/:invoiceId/payments", c.CreatePayment)
+	c.router.Handle(http.MethodGet, version, "/tenants/:tenantId/payments/history", c.ListPaymentHistory)
 
 	return c.router
 }
